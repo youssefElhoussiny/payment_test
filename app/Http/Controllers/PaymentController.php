@@ -17,21 +17,19 @@ class PaymentController extends Controller
    public function purchase(Request $request)
    {
         $user = User::find(1);
-        dd($request->all());
         $paymentMethod = $request->payment_method;
         $price = 100;
-        if (empty($paymentMethod)) {
-           dd('no');
-        }
+
         try{
 
             $user->createOrGetStripeCustomer();
             $user->updateDefaultPaymentMethod($paymentMethod);
-            $user->charge($price , $paymentMethod);
+            $user->charge($price * 100, $paymentMethod);
         }catch(\Exception $e){
             dd($e->getMessage());
         }
 
+        dd("your logic after payment");
         /**
          * 1. Create a new PaymentIntent with the order amount and currency
          * 2. Create a SetupIntent with the order amount and currency
